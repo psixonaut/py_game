@@ -3,8 +3,18 @@ import random
 
 COLORS = [pygame.Color('black'), pygame.Color('white'), pygame.Color('blue')]
 
+
 class Snake:
-    pass
+    def __init__(self, screen, width, height, tile_size):
+        x = round(width / 2) * int(tile_size) - int(tile_size)
+        y = round(height / 2) * int(tile_size) - int(tile_size)
+        pygame.draw.rect(screen, COLORS[2], [x, y, int(tile_size), int(tile_size)])
+
+    def spawn_snake(self, screen, width, height, tile_size):
+        x = round(width / 2) * int(tile_size) - int(tile_size)
+        y = round(height / 2) * int(tile_size) - int(tile_size)
+        pygame.draw.rect(screen, COLORS[2], [x, y, int(tile_size), int(tile_size)])
+
 
 class Field:
     def __init__(self, width, height):
@@ -27,13 +37,18 @@ class Field:
                                  (x * self.cell_size + self.left, y * self.cell_size + self.top,
                                  self.cell_size, self.cell_size), 1)
 
+
 def main():
     pygame.init()
     size = width, height = 600, 600
+    width_tiles = 3
+    height_tiles = 3
+    cell_size = 50
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Инициализация игры')
-    board = Field(20, 20)
-    board.set_view(5, 5, 25)
+    board = Field(width_tiles, height_tiles)
+    board.set_view(0, 0, cell_size)
+    snake = Snake(screen, width_tiles, height_tiles, cell_size)
     running = True
     while running:
         for event in pygame.event.get():
@@ -41,6 +56,7 @@ def main():
                 running = False
         screen.fill(COLORS[0])
         board.render(screen)
+        snake.spawn_snake(screen, width_tiles, height_tiles, cell_size)
         pygame.display.flip()
     pygame.quit()
 
