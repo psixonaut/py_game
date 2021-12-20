@@ -1,7 +1,7 @@
 import pygame
 import random
 
-COLORS = [pygame.Color('black'), pygame.Color('white'), pygame.Color('green')]
+COLORS = [pygame.Color('black'), pygame.Color('white'), pygame.Color('blue')]
 
 class Snake:
     pass
