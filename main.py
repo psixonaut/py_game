@@ -14,6 +14,12 @@ class Snake:
         y = height // 2
         pygame.draw.rect(screen, COLORS[2], [x, y, 10, 10])
 
+    def spawn_snake(self, screen, width, height):
+        global x, y
+        x = width // 2
+        y = height // 2
+        pygame.draw.rect(screen, COLORS[2], [x, y, 10, 10])
+
     def snake_move(self, screen, x1, y1):
         global x, y
         x = x1
@@ -24,13 +30,13 @@ class Snake:
 def move(movement, screen):
     global height, x, y, width
     if movement == 'up' and x != height:
-        Snake.snake_move(screen, x + 3, y)
+        Snake.snake_move(screen, screen, x + 3, y)
     elif movement == 'down' and x > 0:
-        Snake.snake_move(screen, x - 3, y)
+        Snake.snake_move(screen, screen, x - 3, y)
     elif movement == 'right' and y != width:
-        Snake.snake_move(screen, x, y + 3)
+        Snake.snake_move(screen, screen, x, y + 3)
     elif movement == 'left' and y != 0:
-        Snake.snake_move(screen, x, y - 3)
+        Snake.snake_move(screen, screen, x, y - 3)
 
 
 def main():
@@ -38,6 +44,7 @@ def main():
     screen = pygame.display.set_mode(size)
     pygame.display.set_caption('Змейка')
     snake = Snake(screen, width, height)
+    snake.spawn_snake(screen, width, height)
     running = True
     while running:
         for event in pygame.event.get():
