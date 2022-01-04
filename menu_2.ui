@@ -41,7 +41,7 @@
    </property>
    <property name="font">
     <font>
-     <family>Bahnschrift Light SemiCondensed</family>
+     <family>Century Gothic</family>
      <pointsize>54</pointsize>
      <weight>50</weight>
      <bold>false</bold>
@@ -50,7 +50,7 @@
    <property name="styleSheet">
     <string notr="true">background-color:rgb(129, 195, 215);
 color: rgb(47, 102, 144);
-border-radius: 50px
+border-radius:30px
 </string>
    </property>
    <property name="frameShape">
@@ -86,7 +86,7 @@ border-radius: 50px
    </property>
    <property name="font">
     <font>
-     <family>Bahnschrift Light SemiCondensed</family>
+     <family>Century Gothic</family>
      <pointsize>20</pointsize>
     </font>
    </property>
@@ -97,19 +97,6 @@ border-radius: 50px</string>
    </property>
    <property name="text">
     <string>тетрис</string>
-   </property>
-  </widget>
-  <widget class="QLabel" name="label_3">
-   <property name="geometry">
-    <rect>
-     <x>960</x>
-     <y>210</y>
-     <width>211</width>
-     <height>221</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/pixil-frame-0 (3).png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_2">
@@ -123,7 +110,7 @@ border-radius: 50px</string>
    </property>
    <property name="font">
     <font>
-     <family>Bahnschrift Light SemiCondensed</family>
+     <family>Century Gothic</family>
      <pointsize>20</pointsize>
     </font>
    </property>
@@ -139,14 +126,57 @@ border-radius: 50px</string>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>550</x>
-     <y>220</y>
-     <width>200</width>
-     <height>200</height>
+     <x>570</x>
+     <y>210</y>
+     <width>211</width>
+     <height>221</height>
     </rect>
    </property>
    <property name="text">
-    <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;img src=&quot;:/newPrefix/pixil-frame-0 (2).png&quot;/&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (2).png</pixmap>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_3">
+   <property name="geometry">
+    <rect>
+     <x>1000</x>
+     <y>220</y>
+     <width>211</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (3).png</pixmap>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_3">
+   <property name="geometry">
+    <rect>
+     <x>880</x>
+     <y>830</y>
+     <width>321</width>
+     <height>51</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>18</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(129, 195, 215);
+color: rgb(47, 102, 144);
+border-radius:12px</string>
+   </property>
+   <property name="text">
+    <string>Назад</string>
    </property>
   </widget>
  </widget>
