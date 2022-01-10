@@ -1,113 +1,231 @@
 import pygame
-from copy import deepcopy
 from random import choice
+from copy import deepcopy
 
-W, H = 10, 20
-TILE = 30
-GAME_RES = W * TILE, H * TILE
+# Размеры
+w = 10
+h = 20
+cell_size = 30
 FPS = 60
+full_screen = 600, 640
+size = width, height = w * cell_size, h * cell_size
 
 pygame.init()
-# game_sc = pygame.Surface(GAME_RES)
-game_sc = pygame.display.set_mode(GAME_RES)
+
+sc = pygame.display.set_mode(full_screen)
+screen = pygame.Surface(size)
+pygame.display.set_caption('Tetris')
+sc.fill(pygame.Color(10, 10, 10))
+
 clock = pygame.time.Clock()
+# Надписи
+fon_glav = pygame.font.Font(None, 100)
+fon = pygame.font.Font(None, 45)
 
-grid = [pygame.Rect(x * TILE, y * TILE, TILE, TILE) for x in range(W) for y in range(H)]
+name_tetris = fon_glav.render('TETRIS', True, pygame.Color((84, 153, 210)))
+name_score = fon.render('score:', True, pygame.Color((47, 102, 144)))
+name_record = fon.render('record:', True, pygame.Color((47, 102, 144)))
+# Очки
+score = 0
+count_lines = 0
+scores = {0: 0, 1: 100, 2: 300, 3: 700, 4: 1500}
 
-figures_pos = [[(-1, 0), (-2, 0), (0, 0), (1, 0)],
-               [(0, -1), (-1, -1), (-1, 0), (0, 0)],
-               [(-1, 0), (-1, 1), (0, 0), (0, -1)],
-               [(0, 0), (-1, 0), (0, 1), (-1, -1)],
-               [(0, 0), (0, -1), (0, 1), (-1, -1)],
-               [(0, 0), (0, -1), (0, 1), (1, -1)],
-               [(0, 0), (0, -1), (0, 1), (-1, 0)]]
-
-figures = [[pygame.Rect(x + W // 2, y + 1, 1, 1) for x, y in fig_pos] for fig_pos in figures_pos]
-figure_rect = pygame.Rect(0, 0, TILE - 2, TILE - 2)
-field = [[0 for i in range(W)] for j in range(H)]
-
-anim_count, anim_speed, anim_limit = 0, 60, 2000
+count_speed = 0
+speed = 60
+limit = 2000
+# Списки
+list_1 = []
+list_2 = []
+figures = []
+rect_figures = []
+# Матрица поля
+matrix = [[0 for i in range(w)] for j in range(h)]
+# Позиция фигур при появлении
+figures_position = [[(-1, 0), (-2, 0), (0, 0), (1, 0)],
+                    [(0, -1), (-1, -1), (-1, 0), (0, 0)],
+                    [(-1, 0), (-1, 1), (0, 0), (0, -1)],
+                    [(0, 0), (-1, 0), (0, 1), (-1, -1)],
+                    [(0, 0), (0, -1), (0, 1), (-1, -1)],
+                    [(0, 0), (0, -1), (0, 1), (1, -1)],
+                    [(0, 0), (0, -1), (0, 1), (-1, 0)]]
+# Цвета
+color_list = [(155, 93, 229), (241, 91, 181), (254, 228, 64), (0, 187, 249), (0, 245, 212)]
+color = choice(color_list)
+# Генерация позиции фигур
+for i_1 in figures_position:
+    for x, y in i_1:
+        list_1.append([x + w // 2, y + 1, 1, 1])
+    figures.append(list_1)
+    list_1 = []
+# Сохранение фигур
 figure = deepcopy(choice(figures))
+figure_next = deepcopy(choice(figures))
 
 
-def check_borders():
-    if figure[i].x < 0 or figure[i].x > W - 1:
+# Функция проверки поля
+def border_check():
+    if (figure[i])[0] < 0 or (figure[i])[0] > w - 1:
         return False
-    elif figure[i].y > H - 1 or field[figure[i].y][figure[i].x]:
+    elif (figure[i])[1] > h - 1 or matrix[(figure[i])[1]][(figure[i])[0]]:
         return False
     return True
 
+# Получение рекорда
+def get_records():
+    try:
+        with open('record') as s:
+            return s.readline()
+    except FileNotFoundError:
+        with open('record', 'w') as s:
+            s.write('0')
 
-while True:
-    dx, rotate = 0, False
-    game_sc.fill(pygame.Color('black'))
+# Запись рекорда
+def set_records(record, score):
+    this_record = max(int(record), score)
+    with open('record', 'w') as s:
+        s.write(str(this_record))
 
+# Выбор цвета
+def choice_color(color):
+    color_count = color
+    color = choice(color_list)
+    while color == color_count:
+        color = choice(color_list)
+    return color
+
+
+color = choice_color(color)
+next_color = choice_color(color)
+# Цикл игры
+running = True
+while running:
+    sc.fill(pygame.Color(10, 10, 10))
+    record = get_records()
+    move = 0
+    position = False
+    sc.blit(screen, (20, 20))
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
-            exit()
+            running = False
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_LEFT:
-                dx = -1
+                move = -1
             elif event.key == pygame.K_RIGHT:
-                dx = 1
+                move = 1
             elif event.key == pygame.K_DOWN:
-                anim_limit = 100
+                limit = 100
             elif event.key == pygame.K_UP:
-                rotate = True
-    # move x
-    figure_old = deepcopy(figure)
+                position = True
+
+# Перемещение по горизонтали
+    old = deepcopy(figure)
     for i in range(4):
-        figure[i].x += dx
-        if not check_borders():
-            figure = deepcopy(figure_old)
+        (figure[i])[0] += move
+        if not border_check():
+            figure = deepcopy(old)
             break
-    # move y
-    anim_count += anim_speed
-    if anim_count > anim_limit:
-        anim_count = 0
-        figure_old = deepcopy(figure)
+
+# Перемещение по вертикали
+    count_speed += speed
+    if count_speed > limit:
+        count_speed = 0
+        old = deepcopy(figure)
         for i in range(4):
-            figure[i].y += 1
-            if not check_borders():
-                for j in range(4):
-                    field[figure_old[j].y][figure_old[j].x] = pygame.Color('white')
-                figure = deepcopy(choice(figures))
-                anim_limit = 2000
+            (figure[i])[1] += 1
+            if not border_check():
+                for i in range(4):
+                    matrix[(old[i])[1]][(old[i])[0]] = color
+                figure = figure_next
+                color = next_color
+                figure_next = deepcopy(choice(figures))
+                next_color = choice_color(color)
+                limit = 2000
                 break
-    # rotate
-    center = figure[0]
-    figure_old = deepcopy(figure)
-    if rotate:
+
+# Вращение фигур
+    rotation = figure[0]
+    old = deepcopy(figure)
+    if position:
         for i in range(4):
-            x = figure[i].y - center.y
-            y = figure[i].x - center.x
-            figure[i].x = center.x - x
-            figure[i].y = center.y + y
-            if not check_borders():
-                figure = deepcopy(figure_old)
+            x = (figure[i])[1] - rotation[1]
+            y = (figure[i])[0] - rotation[0]
+            (figure[i])[0] = rotation[0] - x
+            (figure[i])[1] = rotation[1] + y
+            if not border_check():
+                figure = deepcopy(old)
                 break
-    # check lines
-    line = H - 1
-    for row in range(H - 1, -1, -1):
+
+# Проверка на собранную линию
+    matrix_line = h - 1
+    count_lines = 0
+    for j_1 in range(h - 1, -1, -1):
         count = 0
-        for i in range(W):
-            if field[row][i]:
+        for i in range(w):
+            if matrix[j_1][i]:
                 count += 1
-            field[line][i] = field[row][i]
-        if count < W:
-            line -= 1
-    # draw grid
-    [pygame.draw.rect(game_sc, (40, 40, 40), i_rect, 1) for i_rect in grid]
-    # draw figure
+            matrix[matrix_line][i] = matrix[j_1][i]
+        if count < w:
+            matrix_line -= 1
+        else:
+            speed += 3
+            count_lines += 1
+
+    score += scores[count_lines]
+# Отрисовка поля
+    screen.fill(pygame.Color('black'))
+    for y in range(h):
+        for x in range(w):
+            pygame.draw.rect(screen, pygame.Color(40, 40, 40),
+                             (x * cell_size, y * cell_size,
+                              cell_size, cell_size), 2)
+
+# Отрисовка фигур
     for i in range(4):
-        figure_rect.x = figure[i].x * TILE
-        figure_rect.y = figure[i].y * TILE
-        pygame.draw.rect(game_sc, pygame.Color('white'), figure_rect)
-    # draw field
-    for y, raw in enumerate(field):
-        for x, col in enumerate(raw):
-            if col:
-                figure_rect.x, figure_rect.y = x * TILE, y * TILE
-                pygame.draw.rect(game_sc, col, figure_rect)
+        pygame.draw.rect(screen, pygame.Color(color),
+                         ((figure[i])[0] * cell_size, (figure[i])[1] * cell_size,
+                          cell_size - 2, cell_size - 2))
+
+# Отрисовка изменений
+    x = -1
+    y = -1
+    for i in matrix:
+        x = -1
+        y += 1
+        for j in i:
+            x += 1
+            if j:
+                pygame.draw.rect(screen, j, (x * cell_size, y * cell_size,
+                                             cell_size - 2, cell_size - 2))
+# Отрисовка следующий фигуры
+    for i in range(4):
+        pygame.draw.rect(sc, pygame.Color(next_color),
+                         ((figure_next[i])[0] * cell_size + 310, (figure_next[i])[1] * cell_size + 185,
+                          cell_size - 2, cell_size - 2))
+# Отрисовка надписей
+    sc.blit(name_tetris, (330, 20))
+    sc.blit(name_score, (330, 100))
+    sc.blit(fon.render(str(score), True, pygame.Color((163, 206, 241))), (440, 100))
+    sc.blit(name_record, (330, 400))
+    sc.blit(fon.render(record, True, pygame.Color((163, 206, 241))), (450, 400))
+
+# Поражение
+    for i in range(w):
+        if matrix[0][i]:
+            set_records(record, score)
+            matrix = [[0 for i in range(w)] for i in range(h)]
+            count_speed = 0
+            speed = 60
+            limit = 2000
+            score = 0
+            for y in range(h):
+                for x in range(w):
+                    pygame.draw.rect(screen, pygame.Color(40, 40, 40),
+                                     (x * cell_size, y * cell_size,
+                                      cell_size, cell_size))
+                    sc.blit(screen, (20, 20))
+                    pygame.display.flip()
+                    clock.tick(200)
+
     pygame.display.flip()
     clock.tick(FPS)
+pygame.quit()
