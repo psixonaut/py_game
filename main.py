@@ -13,6 +13,9 @@ from random import choice
 from PyQt5.QtWidgets import QMessageBox
 from pygame import mixer
 
+def except_hook(cls, exception, traceback) -> None:
+    sys.__excepthook__(cls, exception, traceback)
+
 
 class Greet_Window(QDialog):
     def __init__(self):
@@ -43,8 +46,8 @@ class Window(QDialog):
         super(Window, self).__init__()
         self.initUI()
 
-        mixer.music.load('music.wav.mp3')
-        mixer.music.play(-1)
+        # mixer.music.load('music.wav.mp3')
+        # mixer.music.play(-1)
     def initUI(self):
         loadUi('menu_2.ui', self)
         self.show()
@@ -189,8 +192,8 @@ class Login_Window(QDialog):
         self.bd.close()
         if name_info in all_names and passw_info in all_passwords:
             into_profile = True
-            global name_info
-            global passw_info
+            # global name_info
+            # global passw_info
             profile = Profile_Window()
             index = widg.currentIndex() + 1
             widg.insertWidget(index, profile)
@@ -229,9 +232,9 @@ class Signup_Window(QDialog):
         if name_info == '':
             Fail_name()
         if len(passw_info) >= 6 and not passw_info.isdigit() and not passw_info.isalpha():
-            bd = sqlite3.connect("our_users.sqlite")
+            bd = sqlite3.connect("users_information.sqlite")
             cur = bd.cursor()
-            cur.execute("INSERT INTO users_info(name, password) VALUES(name_info, passw_info)")
+            cur.execute('INSERT INTO users VALUES (?)', (name_info))
             bd.commit()
             cur.close()
             bd.close()
@@ -303,4 +306,5 @@ if __name__ == "__main__":
     widg.setWindowTitle('Pyminigames')
     widg.show()
     result = app.exec_()
-    sys.exit(result)
+    sys.excepthook = except_hook
+    sys.exit(app.exec_())
