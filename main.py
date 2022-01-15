@@ -1,17 +1,10 @@
-import random
 import sys
-import pygame
 import sqlite3
-import os
-from PyQt5.QtWidgets import QApplication, QPushButton, QMainWindow, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5 import QtWidgets
-from PyQt5.QtCore import QTimer
-import pygame
 from PyQt5.uic import loadUi
-from copy import deepcopy
-from random import choice
 from PyQt5.QtWidgets import QMessageBox
-from pygame import mixer
+
 
 def except_hook(cls, exception, traceback) -> None:
     sys.__excepthook__(cls, exception, traceback)
@@ -21,6 +14,7 @@ class Greet_Window(QDialog):
     def __init__(self):
         super(Greet_Window, self).__init__()
         self.initUI()
+
 
     def initUI(self):
         loadUi('main_menu.ui', self)
@@ -46,20 +40,26 @@ class Window(QDialog):
         super(Window, self).__init__()
         self.initUI()
 
-        # mixer.music.load('music.wav.mp3')
-        # mixer.music.play(-1)
     def initUI(self):
         loadUi('menu_2.ui', self)
         self.show()
         self.pushButton.clicked.connect(self.to_tet_game)
         self.pushButton_2.clicked.connect(self.to_snake_game)
         self.pushButton_3.clicked.connect(self.back)
+        self.pushButton_4.clicked.connect(self.to_shooter_game)
 
     def back(self):
         back = Greet_Window()
         index = widg.currentIndex() + 1
         widg.insertWidget(index, back)
         widg.setCurrentIndex(index)
+
+    def to_shooter_game(self):
+        pass
+        # background = Background2()
+        # index = widg.currentIndex() + 1
+        # widg.insertWidget(index, background)
+        # widg.setCurrentIndex(index)
 
     def to_tet_game(self):
         background = Background()
@@ -88,6 +88,8 @@ class Profile_Window(QDialog):
     def initUI(self):
         loadUi('profile.ui', self)
         self.pushButton_3.clicked.connect(self.to_back)
+        #self.listWidget.addItem(name_info)
+        self.pushButton_4.clicked.connect(self.to_logout)
         self.show()
 
     def initUI0(self):
@@ -96,10 +98,6 @@ class Profile_Window(QDialog):
         self.pushButton_2.clicked.connect(self.to_signup)
         self.pushButton_3.clicked.connect(self.to_back)
         self.show()
-        self.fill_info()
-
-    def fill_info(self):
-        pass
 
     def to_signup(self):
         signup = Signup_Window()
@@ -108,6 +106,14 @@ class Profile_Window(QDialog):
         widg.setCurrentIndex(index)
 
     def to_login(self):
+        login = Login_Window()
+        index = widg.currentIndex() + 1
+        widg.insertWidget(index, login)
+        widg.setCurrentIndex(index)
+
+    def to_logout(self):
+        global into_profile
+        into_profile = False
         login = Login_Window()
         index = widg.currentIndex() + 1
         widg.insertWidget(index, login)
@@ -128,7 +134,6 @@ class Background(QDialog):
     def initUI(self):
         loadUi('game_background.ui', self)
         self.pushButton.clicked.connect(self.init_pygame)
-        self.pushButton_2.clicked.connect(self.to_stop)
         self.pushButton_3.clicked.connect(self.to_menu)
         self.show()
 
@@ -141,9 +146,6 @@ class Background(QDialog):
         widg.insertWidget(index, menu)
         widg.setCurrentIndex(index)
 
-    def to_stop(self):
-        pass
-
 
 class Background1(QDialog):
     def __init__(self):
@@ -153,7 +155,6 @@ class Background1(QDialog):
     def initUI(self):
         loadUi('game_background.ui', self)
         self.pushButton.clicked.connect(self.init_pygame)
-        self.pushButton_2.clicked.connect(self.to_stop)
         self.pushButton_3.clicked.connect(self.to_menu)
         self.show()
 
@@ -165,9 +166,6 @@ class Background1(QDialog):
         index = widg.currentIndex() + 1
         widg.insertWidget(index, menu)
         widg.setCurrentIndex(index)
-
-    def to_stop(self):
-        pass
 
 
 class Login_Window(QDialog):
@@ -182,18 +180,18 @@ class Login_Window(QDialog):
     def login(self):
         name_info = self.lineEdit.text()
         passw_info = self.lineEdit_2.text()
-        bd = sqlite3.connect("our_users.sqlite")
+        bd = sqlite3.connect("our_users_1.sqlite")
         cur = bd.cursor()
-        all_names = cur.execute("""SELECT * FROM name""").fetchall()
-        #print('i')
-        all_passwords = cur.execute("""SELECT * FROM password""").fetchall()
-        #print(all_names, all_passwords)
-        self.bd.commit()
-        self.bd.close()
+        all_login = cur.execute("""SELECT * FROM users_info""").fetchall()
+        all_passwords = []
+        all_names = []
+        for i in all_login:
+            all_names.append(i[0])
+        for j in all_login:
+            all_passwords.append(j[1])
         if name_info in all_names and passw_info in all_passwords:
+            global into_profile
             into_profile = True
-            # global name_info
-            # global passw_info
             profile = Profile_Window()
             index = widg.currentIndex() + 1
             widg.insertWidget(index, profile)
@@ -229,17 +227,30 @@ class Signup_Window(QDialog):
     def signup(self):
         name_info = self.lineEdit.text()
         passw_info = self.lineEdit_2.text()
+
+        bd = sqlite3.connect("our_users_1.sqlite")
+        cur = bd.cursor()
+        all_login = cur.execute("""SELECT * FROM users_info""").fetchall()
+        all_passwords = []
+        all_names = []
+        for i in all_login:
+            all_names.append(i[0])
+        for j in all_login:
+            all_passwords.append(j[1])
         if name_info == '':
             Fail_name()
         if len(passw_info) >= 6 and not passw_info.isdigit() and not passw_info.isalpha():
-            bd = sqlite3.connect("users_information.sqlite")
-            cur = bd.cursor()
-            cur.execute('INSERT INTO users VALUES (?)', (name_info))
-            bd.commit()
-            cur.close()
-            bd.close()
-            Success()
-            self.to_login()
+            if name_info not in all_names:
+                bd = sqlite3.connect("our_users_1.sqlite")
+                cur = bd.cursor()
+                cur.execute('INSERT INTO users_info VALUES (?, ?, 0, 0)', (name_info, passw_info))
+                bd.commit()
+                cur.close()
+                bd.close()
+                Success()
+                self.to_login()
+            else:
+                InDB()
         else:
             Fail()
 
@@ -248,6 +259,20 @@ class Signup_Window(QDialog):
         index = widg.currentIndex() + 1
         widg.insertWidget(index, login)
         widg.setCurrentIndex(index)
+
+
+class InDB(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        mesage_maker = QMessageBox()
+        mesage_maker.setWindowTitle('Pyminigames')
+        mesage_maker.setText("Такой пользователь уже существует")
+        mesage_maker.setIcon(QMessageBox.Critical)
+        mesage_maker.setStandardButtons(QMessageBox.Ok)
+        mesage_maker.setStyleSheet("color:rgb(47, 102, 144);\n"
+                                   "background-color:rgb(129, 195, 215);\n"
+                                   "border-radius: 30px;")
+        start = mesage_maker.exec_()
 
 
 class Fail(QMessageBox):
@@ -297,10 +322,8 @@ if __name__ == "__main__":
     grt_wnd = Greet_Window()
     wnd = Window()
     widg = QtWidgets.QStackedWidget()
-
     widg.addWidget(grt_wnd)
     widg.addWidget(wnd)
-
     widg.setFixedWidth(1920)
     widg.setFixedHeight(1000)
     widg.setWindowTitle('Pyminigames')
