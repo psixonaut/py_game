@@ -153,7 +153,7 @@ border-radius: 50px</string>
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (3).png</pixmap>
+    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (5).png</pixmap>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_3">
@@ -217,7 +217,47 @@ color: rgb(47, 102, 144);
 border-radius: 50px</string>
    </property>
    <property name="text">
-    <string>space shooter</string>
+    <string>space invaders</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_5">
+   <property name="geometry">
+    <rect>
+     <x>1250</x>
+     <y>350</y>
+     <width>211</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (4).png</pixmap>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_5">
+   <property name="geometry">
+    <rect>
+     <x>1210</x>
+     <y>580</y>
+     <width>271</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(217, 220, 214);
+color: rgb(47, 102, 144);
+border-radius: 50px</string>
+   </property>
+   <property name="text">
+    <string>arcanoid</string>
    </property>
   </widget>
  </widget>

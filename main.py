@@ -15,7 +15,6 @@ class Greet_Window(QDialog):
         super(Greet_Window, self).__init__()
         self.initUI()
 
-
     def initUI(self):
         loadUi('main_menu.ui', self)
         self.pushButton.clicked.connect(self.to_menu)
@@ -47,6 +46,7 @@ class Window(QDialog):
         self.pushButton_2.clicked.connect(self.to_snake_game)
         self.pushButton_3.clicked.connect(self.back)
         self.pushButton_4.clicked.connect(self.to_shooter_game)
+        self.pushButton_5.clicked.connect(self.to_arcanoid_game)
 
     def back(self):
         back = Greet_Window()
@@ -55,11 +55,16 @@ class Window(QDialog):
         widg.setCurrentIndex(index)
 
     def to_shooter_game(self):
-        pass
-        # background = Background2()
-        # index = widg.currentIndex() + 1
-        # widg.insertWidget(index, background)
-        # widg.setCurrentIndex(index)
+        background = Background2()
+        index = widg.currentIndex() + 1
+        widg.insertWidget(index, background)
+        widg.setCurrentIndex(index)
+
+    def to_arcanoid_game(self):
+        background = Background3()
+        index = widg.currentIndex() + 1
+        widg.insertWidget(index, background)
+        widg.setCurrentIndex(index)
 
     def to_tet_game(self):
         background = Background()
@@ -88,7 +93,14 @@ class Profile_Window(QDialog):
     def initUI(self):
         loadUi('profile.ui', self)
         self.pushButton_3.clicked.connect(self.to_back)
-        #self.listWidget.addItem(name_info)
+        global name_for_profile
+        self.listWidget.addItem(name_for_profile)
+        bd = sqlite3.connect("our_users_1.sqlite")
+        cur = bd.cursor()
+        tet_res, snake_res = cur.execute(f"""SELECT tetris_score, snake_score FROM users_info
+                                             WHERE name = '{name_for_profile}'""").fetchone()
+        self.listWidget_2.addItem(str(tet_res))
+        self.listWidget_3.addItem(str(snake_res))
         self.pushButton_4.clicked.connect(self.to_logout)
         self.show()
 
@@ -138,6 +150,7 @@ class Background(QDialog):
         self.show()
 
     def init_pygame(self):
+
         import tetris
 
     def to_menu(self):
@@ -146,6 +159,46 @@ class Background(QDialog):
         widg.insertWidget(index, menu)
         widg.setCurrentIndex(index)
 
+class Background3(QDialog):
+    def __init__(self):
+        super(Background3, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        loadUi('game_background.ui', self)
+        self.pushButton.clicked.connect(self.init_pygame)
+        self.pushButton_3.clicked.connect(self.to_menu)
+        self.show()
+
+    def init_pygame(self):
+
+        import arcanoid
+
+    def to_menu(self):
+        menu = Window()
+        index = widg.currentIndex() + 1
+        widg.insertWidget(index, menu)
+        widg.setCurrentIndex(index)
+
+class Background2(QDialog):
+    def __init__(self):
+        super(Background2, self).__init__()
+        self.initUI()
+
+    def initUI(self):
+        loadUi('game_background.ui', self)
+        self.pushButton.clicked.connect(self.init_pygame)
+        self.pushButton_3.clicked.connect(self.to_menu)
+        self.show()
+
+    def init_pygame(self):
+        import space_invaders
+
+    def to_menu(self):
+        menu = Window()
+        index = widg.currentIndex() + 1
+        widg.insertWidget(index, menu)
+        widg.setCurrentIndex(index)
 
 class Background1(QDialog):
     def __init__(self):
@@ -167,6 +220,7 @@ class Background1(QDialog):
         widg.insertWidget(index, menu)
         widg.setCurrentIndex(index)
 
+name_for_profile = ''
 
 class Login_Window(QDialog):
     def __init__(self):
@@ -190,12 +244,16 @@ class Login_Window(QDialog):
         for j in all_login:
             all_passwords.append(j[1])
         if name_info in all_names and passw_info in all_passwords:
+            global name_for_profile
             global into_profile
             into_profile = True
+            name_for_profile = name_info
             profile = Profile_Window()
             index = widg.currentIndex() + 1
             widg.insertWidget(index, profile)
             widg.setCurrentIndex(index)
+        else:
+            No_user()
 
     def to_back(self):
         back = Greet_Window()
@@ -302,6 +360,18 @@ class Fail_name(QMessageBox):
                                    "border-radius: 30px;")
         start = mesage_maker.exec_()
 
+class No_user(QMessageBox):
+    def __init__(self):
+        super().__init__()
+        mesage_maker = QMessageBox()
+        mesage_maker.setWindowTitle('Pyminigames')
+        mesage_maker.setText("Неправильный пароль или имя пользователя")
+        mesage_maker.setIcon(QMessageBox.Critical)
+        mesage_maker.setStandardButtons(QMessageBox.Ok)
+        mesage_maker.setStyleSheet("color:rgb(47, 102, 144);\n"
+                                   "background-color:rgb(129, 195, 215);\n"
+                                   "border-radius: 30px;")
+        start = mesage_maker.exec_()
 
 class Success(QMessageBox):
     def __init__(self):
