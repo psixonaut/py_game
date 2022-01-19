@@ -1,3 +1,4 @@
+import time
 import pygame
 import random
 
@@ -10,6 +11,7 @@ class Game:
                        pygame.Color('brown')]
         self.fps = pygame.time.Clock()
         self.score = 0
+        self.over = False
 
     def start_game(self):
         pygame.init()
@@ -17,7 +19,7 @@ class Game:
     def print_name(self):
         self.screen = pygame.display.set_mode((
             self.width, self.height))
-        pygame.display.set_caption('Snake Game')
+        pygame.display.set_caption('Snake')
 
     def update(self):
         pygame.display.flip()
@@ -37,6 +39,7 @@ class Game:
 
     def game_over(self):
         #сюда дописать добавление в бд
+        self.screen.fill(self.COLORS[3])
         game_over_font = pygame.font.SysFont('monaco', 72)
         game_over_surf = game_over_font.render('Game over', True, self.COLORS[0])
         game_over_rect = game_over_surf.get_rect()
@@ -44,6 +47,8 @@ class Game:
         self.screen.blit(game_over_surf, game_over_rect)
         self.show_score(0)
         pygame.display.flip()
+        self.over = True
+
 
 
 class Snake:
@@ -78,8 +83,8 @@ class Snake:
             food_pos = [random.randrange(30, width/10)*10 - 20,
                         random.randrange(30, height/10)*10 - 20]
             score += 1
-        else:
-            self.snake_body.pop()
+        # else:
+        #     self.snake_body.pop()
         return score, food_pos
 
     def spawn_snake(self, screen, surface_color):
@@ -97,9 +102,8 @@ class Snake:
             or self.snake_head[1] < 0
                 )):
             game_end()
-        for block in self.snake_body[1:]:
-            if (block[0] == self.snake_head[0] and
-                    block[1] == self.snake_head[1]):
+        for square in self.snake_body[1:]:
+            if (square[0] == self.snake_head[0] and square[1] == self.snake_head[1]):
                 game_end()
 
 
@@ -141,10 +145,12 @@ while running:
     snake.new_directions = new_directions
     snake.check_direction_changes()
     snake.change_position()
+    snake.collision_check(game.game_over, game.width, game.height)
     game.score, food.food_pos = snake.body_mechanism(game.score, food.food_pos, game.width, game.height)
     snake.spawn_snake(game.screen, game.COLORS[3])
     food.spawn_food(game.screen)
     snake.collision_check(game.game_over, game.width, game.height)
     game.show_score()
-    game.update()
+    if not game.over:
+        game.update()
 pygame.quit()
