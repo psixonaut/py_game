@@ -6,6 +6,7 @@ class Game:
     aliens = []
     rockets = []
     lost = False
+    colors = [pygame.Color('black'), pygame.Color('white'), pygame.Color('green'), pygame.Color('red')]
 
     def __init__(self, width, height):
         pygame.init()
@@ -37,14 +38,14 @@ class Game:
 
             pygame.display.flip()
             self.clock.tick(60)
-            self.screen.fill((0, 0, 0))
+            self.screen.fill(Game.colors[0])
 
             for inwader in self.aliens:
                 inwader.spawn(0.2)
                 inwader.check_for_collision(self)
                 if (inwader.y > height):
                     self.lost = True
-                    self.write_text("LOST")
+                    self.write_text("DEFEAT")
 
             for laser in self.rockets:
                 laser.spawn()
@@ -55,7 +56,7 @@ class Game:
     def write_text(self, text):
         pygame.font.init()
         font = pygame.font.SysFont('Monaco', 50)
-        textsurface = font.render(text, False, (44, 0, 62))
+        textsurface = font.render(text, True, (Game.colors[1]))
         self.screen.blit(textsurface, (110, 160))
 
 
@@ -67,7 +68,7 @@ class Alien:
         self.size = 30
 
     def spawn(self, speed_up_coef):
-        pygame.draw.rect(self.game.screen, (81, 43, 88), pygame.Rect(self.x, self.y, self.size, self.size))
+        pygame.draw.rect(self.game.screen, (Game.colors[2]), pygame.Rect(self.x, self.y, self.size, self.size))
         self.y += speed_up_coef
 
     def check_for_collision(self, game):
@@ -87,7 +88,7 @@ class Hero:
         self.y = y
 
     def spawn(self):
-        pygame.draw.rect(self.game.screen, (210, 250, 251), pygame.Rect(self.x, self.y, 8, 5))
+        pygame.draw.rect(self.game.screen, (Game.colors[1]), pygame.Rect(self.x, self.y, 8, 5))
 
 
 class Generator:
@@ -106,7 +107,7 @@ class Rocket:
         self.game = game
 
     def spawn(self):
-        pygame.draw.rect(self.game.screen, (254, 52, 110), pygame.Rect(self.x, self.y, 2, 4))
+        pygame.draw.rect(self.game.screen, (Game.colors[3]), pygame.Rect(self.x, self.y, 2, 4))
         self.y -= 2
 
 
