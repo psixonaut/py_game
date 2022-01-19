@@ -9,7 +9,7 @@ from PyQt5.QtWidgets import QMessageBox
 def except_hook(cls, exception, traceback) -> None:
     sys.__excepthook__(cls, exception, traceback)
 
-
+#приветственное меню
 class Greet_Window(QDialog):
     def __init__(self):
         super(Greet_Window, self).__init__()
@@ -33,7 +33,7 @@ class Greet_Window(QDialog):
         widg.insertWidget(index, profile)
         widg.setCurrentIndex(index)
 
-
+#меню с играми
 class Window(QDialog):
     def __init__(self):
         super(Window, self).__init__()
@@ -47,6 +47,7 @@ class Window(QDialog):
         self.pushButton_3.clicked.connect(self.back)
         self.pushButton_4.clicked.connect(self.to_shooter_game)
         self.pushButton_5.clicked.connect(self.to_arcanoid_game)
+        self.pushButton_6.clicked.connect(self.to_tictactoe_game)
 
     def back(self):
         back = Greet_Window()
@@ -55,33 +56,39 @@ class Window(QDialog):
         widg.setCurrentIndex(index)
 
     def to_shooter_game(self):
-        background = Background2()
+        background = Background('shooter')
+        index = widg.currentIndex() + 1
+        widg.insertWidget(index, background)
+        widg.setCurrentIndex(index)
+
+    def to_tictactoe_game(self):
+        background = Background('tictactoe')
         index = widg.currentIndex() + 1
         widg.insertWidget(index, background)
         widg.setCurrentIndex(index)
 
     def to_arcanoid_game(self):
-        background = Background3()
+        background = Background('arcanoid')
         index = widg.currentIndex() + 1
         widg.insertWidget(index, background)
         widg.setCurrentIndex(index)
 
     def to_tet_game(self):
-        background = Background()
+        background = Background('tetris')
         index = widg.currentIndex() + 1
         widg.insertWidget(index, background)
         widg.setCurrentIndex(index)
 
     def to_snake_game(self):
-        background1 = Background1()
+        background = Background('snake')
         index = widg.currentIndex() + 1
-        widg.insertWidget(index, background1)
+        widg.insertWidget(index, background)
         widg.setCurrentIndex(index)
 
 
 into_profile = False
 
-
+#страница с профилем/переход в регистрацию и вход
 class Profile_Window(QDialog):
     def __init__(self):
         super(Profile_Window, self).__init__()
@@ -137,11 +144,12 @@ class Profile_Window(QDialog):
         widg.insertWidget(index, back)
         widg.setCurrentIndex(index)
 
-
+#фон к играм
 class Background(QDialog):
-    def __init__(self):
+    def __init__(self, game):
         super(Background, self).__init__()
         self.initUI()
+        self.game = game
 
     def initUI(self):
         loadUi('game_background.ui', self)
@@ -150,69 +158,16 @@ class Background(QDialog):
         self.show()
 
     def init_pygame(self):
-
-        import tetris
-
-    def to_menu(self):
-        menu = Window()
-        index = widg.currentIndex() + 1
-        widg.insertWidget(index, menu)
-        widg.setCurrentIndex(index)
-
-class Background3(QDialog):
-    def __init__(self):
-        super(Background3, self).__init__()
-        self.initUI()
-
-    def initUI(self):
-        loadUi('game_background.ui', self)
-        self.pushButton.clicked.connect(self.init_pygame)
-        self.pushButton_3.clicked.connect(self.to_menu)
-        self.show()
-
-    def init_pygame(self):
-
-        import arcanoid
-
-    def to_menu(self):
-        menu = Window()
-        index = widg.currentIndex() + 1
-        widg.insertWidget(index, menu)
-        widg.setCurrentIndex(index)
-
-class Background2(QDialog):
-    def __init__(self):
-        super(Background2, self).__init__()
-        self.initUI()
-
-    def initUI(self):
-        loadUi('game_background.ui', self)
-        self.pushButton.clicked.connect(self.init_pygame)
-        self.pushButton_3.clicked.connect(self.to_menu)
-        self.show()
-
-    def init_pygame(self):
-        import space_invaders
-
-    def to_menu(self):
-        menu = Window()
-        index = widg.currentIndex() + 1
-        widg.insertWidget(index, menu)
-        widg.setCurrentIndex(index)
-
-class Background1(QDialog):
-    def __init__(self):
-        super(Background1, self).__init__()
-        self.initUI()
-
-    def initUI(self):
-        loadUi('game_background.ui', self)
-        self.pushButton.clicked.connect(self.init_pygame)
-        self.pushButton_3.clicked.connect(self.to_menu)
-        self.show()
-
-    def init_pygame(self):
-        import snake
+        if self.game == 'tetris':
+            import tetris
+        elif self.game == 'snake':
+            import snake
+        elif self.game == 'shooter':
+            import space_invaders
+        elif self.game == 'arcanoid':
+            import arcanoid
+        elif self.game == 'tictactoe':
+            import tic_tac_toe
 
     def to_menu(self):
         menu = Window()
@@ -222,6 +177,7 @@ class Background1(QDialog):
 
 name_for_profile = ''
 
+#страница входа
 class Login_Window(QDialog):
     def __init__(self):
         super(Login_Window, self).__init__()
@@ -267,7 +223,7 @@ class Login_Window(QDialog):
         widg.insertWidget(index, signup)
         widg.setCurrentIndex(index)
 
-
+#страница регистрации
 class Signup_Window(QDialog):
     def __init__(self):
         super(Signup_Window, self).__init__()
@@ -318,7 +274,7 @@ class Signup_Window(QDialog):
         widg.insertWidget(index, login)
         widg.setCurrentIndex(index)
 
-
+#уведомления
 class InDB(QMessageBox):
     def __init__(self):
         super().__init__()
