@@ -164,7 +164,7 @@ class Background(QDialog):
             import snake
         elif self.game == 'shooter':
             import space_invaders
-        elif self.game == 'arcanoid':
+        elif self.game == 'arkanoid':
             import arcanoid
         elif self.game == 'tictactoe':
             import tic_tac_toe
