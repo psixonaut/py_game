@@ -79,7 +79,7 @@ border-radius:30px
   <widget class="QPushButton" name="pushButton">
    <property name="geometry">
     <rect>
-     <x>110</x>
+     <x>100</x>
      <y>590</y>
      <width>211</width>
      <height>41</height>
@@ -103,7 +103,7 @@ border-radius: 50px</string>
   <widget class="QPushButton" name="pushButton_2">
    <property name="geometry">
     <rect>
-     <x>510</x>
+     <x>500</x>
      <y>590</y>
      <width>141</width>
      <height>41</height>
@@ -127,7 +127,7 @@ border-radius: 50px</string>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>130</x>
+     <x>110</x>
      <y>340</y>
      <width>211</width>
      <height>221</height>
@@ -143,8 +143,8 @@ border-radius: 50px</string>
   <widget class="QLabel" name="label_3">
    <property name="geometry">
     <rect>
-     <x>500</x>
-     <y>350</y>
+     <x>470</x>
+     <y>360</y>
      <width>211</width>
      <height>201</height>
     </rect>
@@ -183,7 +183,7 @@ border-radius:20px</string>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>870</x>
+     <x>830</x>
      <y>350</y>
      <width>211</width>
      <height>201</height>
@@ -199,7 +199,7 @@ border-radius:20px</string>
   <widget class="QPushButton" name="pushButton_4">
    <property name="geometry">
     <rect>
-     <x>840</x>
+     <x>790</x>
      <y>590</y>
      <width>271</width>
      <height>41</height>
@@ -223,7 +223,7 @@ border-radius: 50px</string>
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>1250</x>
+     <x>1200</x>
      <y>350</y>
      <width>211</width>
      <height>201</height>
@@ -233,13 +233,13 @@ border-radius: 50px</string>
     <string/>
    </property>
    <property name="pixmap">
-    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (4).png</pixmap>
+    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (6).png</pixmap>
    </property>
   </widget>
   <widget class="QPushButton" name="pushButton_5">
    <property name="geometry">
     <rect>
-     <x>1210</x>
+     <x>1170</x>
      <y>580</y>
      <width>271</width>
      <height>41</height>
@@ -257,7 +257,47 @@ color: rgb(47, 102, 144);
 border-radius: 50px</string>
    </property>
    <property name="text">
-    <string>arcanoid</string>
+    <string>arkanoid</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_6">
+   <property name="geometry">
+    <rect>
+     <x>1540</x>
+     <y>350</y>
+     <width>211</width>
+     <height>201</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>C:/Users/Varya/Pictures/pixil-frame-0 (8).png</pixmap>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton_6">
+   <property name="geometry">
+    <rect>
+     <x>1480</x>
+     <y>590</y>
+     <width>331</width>
+     <height>41</height>
+    </rect>
+   </property>
+   <property name="font">
+    <font>
+     <family>Century Gothic</family>
+     <pointsize>20</pointsize>
+    </font>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">background-color:rgb(217, 220, 214);
+color: rgb(47, 102, 144);
+border-radius: 50px</string>
+   </property>
+   <property name="text">
+    <string>крестики-нолики</string>
    </property>
   </widget>
  </widget>
