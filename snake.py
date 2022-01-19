@@ -1,4 +1,3 @@
-import time
 import pygame
 import random
 
@@ -83,8 +82,8 @@ class Snake:
             food_pos = [random.randrange(30, width/10)*10 - 20,
                         random.randrange(30, height/10)*10 - 20]
             score += 1
-        # else:
-        #     self.snake_body.pop()
+        else:
+            self.snake_body.pop()
         return score, food_pos
 
     def spawn_snake(self, screen, surface_color):
