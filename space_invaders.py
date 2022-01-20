@@ -1,11 +1,65 @@
 import pygame
 
+score = 0
+
+
+class Alien:
+    def __init__(self, game, x, y):
+        self.x = x
+        self.game = game
+        self.y = y
+        self.size = 30
+
+    def spawn(self, speed_up_coef):
+        pygame.draw.rect(self.game.screen, (Game.COLORS[2]), pygame.Rect(self.x, self.y, self.size, self.size))
+        self.y += speed_up_coef
+
+    def check_for_collision(self, game):
+        for laser in game.rockets:
+            if (laser.x < self.x + self.size and
+                    laser.x > self.x - self.size and
+                    laser.y < self.y + self.size and
+                    laser.y > self.y - self.size):
+                game.rockets.remove(laser)
+                game.aliens.remove(self)
+
+
+class Hero:
+    def __init__(self, game, x, y):
+        self.x = x
+        self.game = game
+        self.y = y
+
+    def spawn(self):
+        pygame.draw.rect(self.game.screen, (Game.COLORS[1]), pygame.Rect(self.x, self.y, 8, 5))
+
+
+class Generator:
+    def __init__(self, game):
+        border_x = 30
+        border_y = 50
+        for x in range(border_x, game.width - border_x, border_y):
+            for y in range(border_x, int(game.height / 2), border_y):
+                game.aliens.append(Alien(game, x, y))
+
+
+class Rocket:
+    def __init__(self, game, x, y):
+        self.x = x
+        self.y = y
+        self.game = game
+
+    def spawn(self):
+        pygame.draw.rect(self.game.screen, (Game.COLORS[3]), pygame.Rect(self.x, self.y, 2, 4))
+        self.y -= 2
+
 
 class Game:
     screen = None
     aliens = []
     rockets = []
     lost = False
+    COLORS = [pygame.Color('black'), pygame.Color('white'), pygame.Color('green'), pygame.Color('red')]
 
     def __init__(self, width, height):
         pygame.init()
@@ -37,77 +91,27 @@ class Game:
 
             pygame.display.flip()
             self.clock.tick(60)
-            self.screen.fill((0, 0, 0))
+            self.screen.fill(Game.COLORS[0])
 
             for inwader in self.aliens:
-                inwader.spawn(0.2)
+                inwader.spawn(0.4)
                 inwader.check_for_collision(self)
                 if (inwader.y > height):
                     self.lost = True
-                    self.write_text("LOST")
+                    self.write_text("DEFEAT")
 
             for laser in self.rockets:
                 laser.spawn()
 
             if not self.lost:
                 hero.spawn()
+        pygame.quit()
 
     def write_text(self, text):
         pygame.font.init()
         font = pygame.font.SysFont('Monaco', 50)
-        textsurface = font.render(text, False, (44, 0, 62))
-        self.screen.blit(textsurface, (110, 160))
-
-
-class Alien:
-    def __init__(self, game, x, y):
-        self.x = x
-        self.game = game
-        self.y = y
-        self.size = 30
-
-    def spawn(self, speed_up_coef):
-        pygame.draw.rect(self.game.screen, (81, 43, 88), pygame.Rect(self.x, self.y, self.size, self.size))
-        self.y += speed_up_coef
-
-    def check_for_collision(self, game):
-        for laser in game.rockets:
-            if (laser.x < self.x + self.size and
-                    laser.x > self.x - self.size and
-                    laser.y < self.y + self.size and
-                    laser.y > self.y - self.size):
-                game.rockets.remove(laser)
-                game.aliens.remove(self)
-
-
-class Hero:
-    def __init__(self, game, x, y):
-        self.x = x
-        self.game = game
-        self.y = y
-
-    def spawn(self):
-        pygame.draw.rect(self.game.screen, (210, 250, 251), pygame.Rect(self.x, self.y, 8, 5))
-
-
-class Generator:
-    def __init__(self, game):
-        border_x = 30
-        border_y = 50
-        for x in range(border_x, game.width - border_x, border_y):
-            for y in range(border_x, int(game.height / 2), border_y):
-                game.aliens.append(Alien(game, x, y))
-
-
-class Rocket:
-    def __init__(self, game, x, y):
-        self.x = x
-        self.y = y
-        self.game = game
-
-    def spawn(self):
-        pygame.draw.rect(self.game.screen, (254, 52, 110), pygame.Rect(self.x, self.y, 2, 4))
-        self.y -= 2
+        textsurface = font.render(text, True, (Game.COLORS[1]))
+        self.screen.blit(textsurface, (350, 160))
 
 
 Game(800, 800)
