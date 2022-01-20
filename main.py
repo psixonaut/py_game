@@ -1,4 +1,5 @@
 import sys
+import os
 import sqlite3
 from PyQt5.QtWidgets import QApplication, QDialog
 from PyQt5 import QtWidgets
@@ -159,12 +160,25 @@ class Background(QDialog):
 
     def init_pygame(self):
         if self.game == 'tetris':
+            if name_for_profile == '':
+                with open('name_for_profile', 'w') as s:
+                    s.write('0')
+            else:
+                with open('name_for_profile', 'w') as s:
+                    s.write(name_for_profile)
             import tetris
+            path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'name_for_profile')
+            os.remove(path)
         elif self.game == 'snake':
             import snake
+            snake_score = snake.score
+            bd = sqlite3.connect("our_users_1.sqlite")
+            cur = bd.cursor()
+            cur.execute(f"""UPDATE users_info SET snake_score = {snake_score} WHERE name = '{name_for_profile}'""")
+            bd.commit()
         elif self.game == 'shooter':
             import space_invaders
-        elif self.game == 'arkanoid':
+        elif self.game == 'arcanoid':
             import arcanoid
         elif self.game == 'tictactoe':
             import tic_tac_toe
