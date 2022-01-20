@@ -13,6 +13,7 @@ class Game:
         self.COLORS = [pygame.Color('red'), pygame.Color('green'), pygame.Color('black'), pygame.Color('white'),
                        pygame.Color('brown')]
         self.fps = pygame.time.Clock()
+        self.FPS = 20
         self.over = False
 
     def start_game(self):
@@ -26,7 +27,7 @@ class Game:
     def update(self):
         pygame.display.flip()
         clock = pygame.time.Clock()
-        clock.tick(20)
+        clock.tick(self.FPS)
 
     def show_score(self, choice=1):
         score_font = pygame.font.SysFont('monaco', 24)
@@ -85,6 +86,7 @@ class Snake:
             food_pos = [random.randrange(30, width/10)*10 - 20,
                         random.randrange(30, height/10)*10 - 20]
             score += 1
+            Game().FPS += 1
         else:
             self.snake_body.pop()
         return score, food_pos
