@@ -2,14 +2,17 @@ import pygame
 import random
 
 
+score = 0
+
+
 class Game:
     def __init__(self):
+        global score
         self.width = 800
         self.height = 800
         self.COLORS = [pygame.Color('red'), pygame.Color('green'), pygame.Color('black'), pygame.Color('white'),
                        pygame.Color('brown')]
         self.fps = pygame.time.Clock()
-        self.score = 0
         self.over = False
 
     def start_game(self):
@@ -28,7 +31,7 @@ class Game:
     def show_score(self, choice=1):
         score_font = pygame.font.SysFont('monaco', 24)
         score_surf = score_font.render(
-            'Score: {0}'.format(self.score), True, self.COLORS[2])
+            'Score: {0}'.format(score), True, self.COLORS[2])
         score_rect = score_surf.get_rect()
         if choice == 1:
             score_rect.midtop = (80, 10)
@@ -145,7 +148,7 @@ while running:
     snake.check_direction_changes()
     snake.change_position()
     snake.collision_check(game.game_over, game.width, game.height)
-    game.score, food.food_pos = snake.body_mechanism(game.score, food.food_pos, game.width, game.height)
+    score, food.food_pos = snake.body_mechanism(score, food.food_pos, game.width, game.height)
     snake.spawn_snake(game.screen, game.COLORS[3])
     food.spawn_food(game.screen)
     snake.collision_check(game.game_over, game.width, game.height)
