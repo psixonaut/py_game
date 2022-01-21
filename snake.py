@@ -1,11 +1,10 @@
 import pygame
 import random
-import sqlite3
 
 score = 0
 
 
-class Game:
+class Game:  #основной класс игры
     def __init__(self):
         global score
         self.width = 800
@@ -15,22 +14,22 @@ class Game:
         self.fps = pygame.time.Clock()
         self.over = False
 
-    def start_game(self):
+    def start_game(self):  #функция начала игры
         pygame.init()
         pygame.mixer.music.load('snake.mp3')
         pygame.mixer.music.play()
 
-    def print_name(self):
+    def print_name(self):  #вывод текста
         self.screen = pygame.display.set_mode((
             self.width, self.height))
         pygame.display.set_caption('Змейка')
 
-    def update(self):
+    def update(self):  #обновление экрана
         pygame.display.flip()
         clock = pygame.time.Clock()
         clock.tick(20)
 
-    def show_score(self, choice=1):
+    def show_score(self, choice=1):  #показ счёта
         score_font = pygame.font.SysFont('monaco', 24)
         score_surf = score_font.render(
             'Score: {0}'.format(score), True, self.COLORS[2])
@@ -41,7 +40,7 @@ class Game:
             score_rect.midtop = (360, 120)
         self.screen.blit(score_surf, score_rect)
 
-    def game_over(self):
+    def game_over(self):  #конец игры
         self.screen.fill(self.COLORS[3])
         game_over_font = pygame.font.SysFont('monaco', 72)
         game_over_surf = game_over_font.render('Игра окончена', True, self.COLORS[0])
@@ -53,23 +52,22 @@ class Game:
         self.over = True
 
 
-
-class Snake:
-    def __init__(self, snake_color):
+class Snake:  #класс змейки
+    def __init__(self, snake_color):  #инит змейки
         self.snake_head = [100, 80]
         self.snake_body = [[100, 80], [90, 80], [80, 80]]
         self.snake_color = snake_color
         self.direction = "DOWN"
         self.new_directions = self.direction
 
-    def check_direction_changes(self):
+    def check_direction_changes(self):  #проверка направления, чтобы змейка не повернулась на 180 градусов
         if any((self.new_directions == "RIGHT" and not self.direction == "LEFT",
                 self.new_directions == "LEFT" and not self.direction == "RIGHT",
                 self.new_directions == "UP" and not self.direction == "DOWN",
                 self.new_directions == "DOWN" and not self.direction == "UP")):
             self.direction = self.new_directions
 
-    def change_position(self):
+    def change_position(self):  #определение поворота змейки
         if self.direction == "RIGHT":
             self.snake_head[0] += 10
         elif self.direction == "LEFT":
@@ -79,7 +77,7 @@ class Snake:
         elif self.direction == "DOWN":
             self.snake_head[1] += 10
 
-    def body_mechanism(self, score, food_pos, width, height):
+    def body_mechanism(self, score, food_pos, width, height):  #механизм тела змейки
         self.snake_body.insert(0, list(self.snake_head))
         if (self.snake_head[0] == food_pos[0] and
                 self.snake_head[1] == food_pos[1]):
@@ -90,14 +88,14 @@ class Snake:
             self.snake_body.pop()
         return score, food_pos
 
-    def spawn_snake(self, screen, surface_color):
+    def spawn_snake(self, screen, surface_color):  #отрисовка змейки
         screen.fill(surface_color)
         for pos in self.snake_body:
             pygame.draw.rect(
                 screen, self.snake_color, pygame.Rect(
                     pos[0], pos[1], 10, 10))
 
-    def collision_check(self, game_end, width, height):
+    def collision_check(self, game_end, width, height):  #проверка коллизий
         if any((
             self.snake_head[0] > width-10
             or self.snake_head[0] < 0,
@@ -106,10 +104,12 @@ class Snake:
                 )):
             game_end()
         for square in self.snake_body[1:]:
-            if (square[0] == self.snake_head[0] and square[1] == self.snake_head[1]):
+            if (square[0] == self.snake_head[0]
+                    and square[1] == self.snake_head[1]):
                 game_end()
 
-class Food:
+
+class Food:  #класс еды
     def __init__(self, food_color, width, height):
         self.food_color = food_color
         self.food_x = 10
@@ -117,14 +117,14 @@ class Food:
         self.food_pos = [random.randrange(30, width/10)*10 - 20,
                          random.randrange(30, height/10)*10 - 20]
 
-    def spawn_food(self, screen):
+    def spawn_food(self, screen):  #отрисовка игры
         pygame.draw.rect(
             screen, self.food_color, pygame.Rect(
                 self.food_pos[0], self.food_pos[1],
                 self.food_x, self.food_y))
 
 
-def start():
+def start():  #главное тело игры
     global score
     score = 0
     game = Game()
