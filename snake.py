@@ -21,7 +21,7 @@ class Game:
     def print_name(self):
         self.screen = pygame.display.set_mode((
             self.width, self.height))
-        pygame.display.set_caption('Snake')
+        pygame.display.set_caption('Змейка')
 
     def update(self):
         pygame.display.flip()
@@ -40,10 +40,9 @@ class Game:
         self.screen.blit(score_surf, score_rect)
 
     def game_over(self):
-        #сюда дописать добавление в бд
         self.screen.fill(self.COLORS[3])
         game_over_font = pygame.font.SysFont('monaco', 72)
-        game_over_surf = game_over_font.render('Game over', True, self.COLORS[0])
+        game_over_surf = game_over_font.render('Игра окончена', True, self.COLORS[0])
         game_over_rect = game_over_surf.get_rect()
         game_over_rect.midtop = (360, 15)
         self.screen.blit(game_over_surf, game_over_rect)
