@@ -108,6 +108,8 @@ def end(winner):
 
 def start():
     pygame.init()
+    pygame.mixer.music.load('tictactoe.mp3')
+    pygame.mixer.music.play()
     global COL, window, scr, matric, flag, game_over, kolvo_hodov
     COL = [(155, 93, 229), (241, 91, 181), (0, 187, 249)]
     window = pygame.display.set_mode((600, 600))
