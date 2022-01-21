@@ -1,18 +1,18 @@
 import pygame
 
 
-class Alien:
-    def __init__(self, game, x, y):
+class Alien:  #класс пришельцев (квадраты по которым стреляют)
+    def __init__(self, game, x, y):  #инит пришельцев
         self.x = x
         self.game = game
         self.y = y
         self.size = 30
 
-    def spawn(self, speed_up_coef):
+    def spawn(self, speed_up_coef):  #отрисовка пришельцев
         pygame.draw.rect(self.game.screen, (pygame.Color((155, 93, 229))), pygame.Rect(self.x, self.y, self.size, self.size))
         self.y += speed_up_coef
 
-    def check_for_collision(self, game):
+    def check_for_collision(self, game):  #проверка коллизии ракеты и пришельца
         for laser in game.rockets:
             if (laser.x < self.x + self.size and
                 laser.x > self.x - self.size and
@@ -22,17 +22,17 @@ class Alien:
                 game.aliens.remove(self)
 
 
-class Hero:
-    def __init__(self, game, x, y):
+class Hero:  #класс герой(белый квадратик внизу)
+    def __init__(self, game, x, y):  #инит героя
         self.x = x
         self.game = game
         self.y = y
 
-    def spawn(self):
+    def spawn(self):  #отрисовка героя
         pygame.draw.rect(self.game.screen, (pygame.Color((0, 187, 249))), pygame.Rect(self.x, self.y, 8, 5))
 
 
-class Generator:
+class Generator:  #отрисовка поля пришельцев
     def __init__(self, game):
         border_x = 30
         border_y = 50
@@ -41,19 +41,19 @@ class Generator:
                 game.aliens.append(Alien(game, x, y))
 
 
-class Rocket:
-    def __init__(self, game, x, y):
+class Rocket:  #класс ракет
+    def __init__(self, game, x, y):  #инит ракет
         self.x = x
         self.y = y
         self.game = game
 
-    def spawn(self):
+    def spawn(self):  #отрисовка ракет
         pygame.draw.rect(self.game.screen, (pygame.Color((241, 91, 181))), pygame.Rect(self.x, self.y, 2, 4))
         self.y -= 2
 
 
-class Game:
-    def __init__(self, width, height):
+class Game:  #главный класс игры
+    def __init__(self, width, height):  #инит игры
         self.width = width
         self.height = height
         self.aliens = []
@@ -63,14 +63,14 @@ class Game:
               pygame.Color((155, 93, 229)), pygame.Color(241, 91, 181)]
         self.screen = pygame.display.set_mode((width, height))
 
-    def write_text(self, text):
+    def write_text(self, text):  #вывод текста
         pygame.font.init()
         font = pygame.font.SysFont('Monaco', 50)
         textsurface = font.render(text, True, (self.COLORS[1]))
         self.screen.blit(textsurface, (320, 160))
 
 
-def start():
+def start():  #главное тело игры
     game = Game(800, 800)
     pygame.init()
     pygame.mixer.music.load('space_invaders.mp3')
@@ -117,5 +117,3 @@ def start():
         if not game.lost:
             hero.spawn()
     pygame.quit()
-
-
