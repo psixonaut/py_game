@@ -56,8 +56,8 @@ def start():
     # Генерация прямоугольников
     for i in range(10):
         for j in range(5):
-            block_list.append((10 + 79 * i, 5 + 50 * j, 69, 30))
-            block_list_1.append(pygame.Rect(10 + 79 * i, 5 + 50 * j, 69, 30))
+            block_list.append((10 + 79 * i, 20 + 50 * j, 69, 30))
+            block_list_1.append(pygame.Rect(10 + 79 * i, 20 + 50 * j, 69, 30))
 
     color_list = []
     for i in range(50):
