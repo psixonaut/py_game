@@ -59,7 +59,7 @@ class Game:
     aliens = []
     rockets = []
     lost = False
-    COLORS = [pygame.Color('black'), pygame.Color('white'), pygame.Color('green'), pygame.Color('red')]
+    COLORS = [pygame.Color((16, 20, 25)), pygame.Color((0, 187, 249)), pygame.Color((155, 93, 229)), pygame.Color(241, 91, 181)]
 
     def __init__(self, width, height):
         pygame.init()
@@ -111,7 +111,7 @@ class Game:
         pygame.font.init()
         font = pygame.font.SysFont('Monaco', 50)
         textsurface = font.render(text, True, (Game.COLORS[1]))
-        self.screen.blit(textsurface, (350, 160))
+        self.screen.blit(textsurface, (320, 160))
 
 
 Game(800, 800)
