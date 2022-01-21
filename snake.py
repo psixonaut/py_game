@@ -1,6 +1,6 @@
 import pygame
 import random
-
+import sqlite3
 
 score = 0
 
@@ -13,7 +13,6 @@ class Game:
         self.COLORS = [pygame.Color('red'), pygame.Color('green'), pygame.Color('black'), pygame.Color('white'),
                        pygame.Color('brown')]
         self.fps = pygame.time.Clock()
-        self.FPS = 20
         self.over = False
 
     def start_game(self):
@@ -27,7 +26,7 @@ class Game:
     def update(self):
         pygame.display.flip()
         clock = pygame.time.Clock()
-        clock.tick(self.FPS)
+        clock.tick(20)
 
     def show_score(self, choice=1):
         score_font = pygame.font.SysFont('monaco', 24)
@@ -86,7 +85,6 @@ class Snake:
             food_pos = [random.randrange(30, width/10)*10 - 20,
                         random.randrange(30, height/10)*10 - 20]
             score += 1
-            Game().FPS += 1
         else:
             self.snake_body.pop()
         return score, food_pos
@@ -110,7 +108,6 @@ class Snake:
             if (square[0] == self.snake_head[0] and square[1] == self.snake_head[1]):
                 game_end()
 
-
 class Food:
     def __init__(self, food_color, width, height):
         self.food_color = food_color
@@ -126,35 +123,38 @@ class Food:
                 self.food_x, self.food_y))
 
 
-game = Game()
-game.start_game()
-game.print_name()
-snake = Snake(game.COLORS[1])
-food = Food(game.COLORS[4], game.width, game.height)
-running = True
-while running:
-    new_directions = snake.direction
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            running = False
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_RIGHT or event.key == ord('d'):
-                new_directions = "RIGHT"
-            elif event.key == pygame.K_LEFT or event.key == ord('a'):
-                new_directions = "LEFT"
-            elif event.key == pygame.K_UP or event.key == ord('w'):
-                new_directions = "UP"
-            elif event.key == pygame.K_DOWN or event.key == ord('s'):
-                new_directions = "DOWN"
-    snake.new_directions = new_directions
-    snake.check_direction_changes()
-    snake.change_position()
-    snake.collision_check(game.game_over, game.width, game.height)
-    score, food.food_pos = snake.body_mechanism(score, food.food_pos, game.width, game.height)
-    snake.spawn_snake(game.screen, game.COLORS[3])
-    food.spawn_food(game.screen)
-    snake.collision_check(game.game_over, game.width, game.height)
-    game.show_score()
-    if not game.over:
-        game.update()
-pygame.quit()
+def start():
+    global score
+    score = 0
+    game = Game()
+    game.start_game()
+    game.print_name()
+    snake = Snake(game.COLORS[1])
+    food = Food(game.COLORS[4], game.width, game.height)
+    running = True
+    while running:
+        new_directions = snake.direction
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_RIGHT or event.key == ord('d'):
+                    new_directions = "RIGHT"
+                elif event.key == pygame.K_LEFT or event.key == ord('a'):
+                    new_directions = "LEFT"
+                elif event.key == pygame.K_UP or event.key == ord('w'):
+                    new_directions = "UP"
+                elif event.key == pygame.K_DOWN or event.key == ord('s'):
+                    new_directions = "DOWN"
+        snake.new_directions = new_directions
+        snake.check_direction_changes()
+        snake.change_position()
+        snake.collision_check(game.game_over, game.width, game.height)
+        score, food.food_pos = snake.body_mechanism(score, food.food_pos, game.width, game.height)
+        snake.spawn_snake(game.screen, game.COLORS[3])
+        food.spawn_food(game.screen)
+        snake.collision_check(game.game_over, game.width, game.height)
+        game.show_score()
+        if not game.over:
+            game.update()
+    pygame.quit()
