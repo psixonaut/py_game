@@ -1,20 +1,10 @@
 import pygame
 import random
 
-pygame.init()
-
-COL = [(155, 93, 229), (241, 91, 181), (0, 187, 249)]
-window = pygame.display.set_mode((600, 600))
-pygame.display.set_caption('Tic tac toe')
-scr = pygame.display.set_mode((600, 600))
-scr.fill((0, 0, 0))
-matric = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
-flag = True
-game_over = False
-kolvo_hodov = 0
 
 #рисовка поля
 def field(scr):
+    global COL, window, matric, flag, game_over, kolvo_hodov
     helper = 200
     pygame.draw.rect(scr, COL[0], (0, 0, 600, 600), 50)
     for i in range(2):
@@ -22,20 +12,39 @@ def field(scr):
         pygame.draw.line(scr, COL[0], (0, helper), (600, helper), 25)
         helper += 200
 
+
 #рисовка фигур
 def figures(scr, items):
+    global COL, window, matric, flag, game_over, kolvo_hodov
     for i in range(3):
         for j in range(3):
             if items[i][j] == 10:
-                pygame.draw.circle(scr, (241, 91, 181), (j * 190 + 107, i * 190 + 107), 70, 20)
+                image = pygame.image.load('zero.png')
+                all_sprites = pygame.sprite.Group()
+                bomb = pygame.sprite.Sprite(all_sprites)
+                bomb.image = image
+                bomb.rect = bomb.image.get_rect()
+
+                # задаём случайное местоположение бомбочке
+                bomb.rect.x = j * 190 + 10
+                bomb.rect.y = i * 190 + 10
+                all_sprites.draw(scr)
             elif items[i][j] == 1:
-                pygame.draw.line(scr, (0, 187, 249), (j * 190 + 40, i * 190 + 40), (j * 190 + 175, i * 190 + 175), 25)
-                pygame.draw.line(scr, (0, 187, 249), (j * 190 + 175, i * 190 + 40), (j * 190 + 40, i * 190 + 175), 25)
+                image = pygame.image.load('cross.png')
+                all_sprites = pygame.sprite.Group()
+                bomb = pygame.sprite.Sprite(all_sprites)
+                bomb.image = image
+                bomb.rect = bomb.image.get_rect()
+
+                # задаём случайное местоположение бомбочке
+                bomb.rect.x = j * 190 + 10
+                bomb.rect.y = i * 190 + 10
+                all_sprites.draw(scr)
+
 
 #проверка победы
 def check(matric):
-    global kolvo_hodov
-    global game_over
+    global COL, window, scr, flag, game_over, kolvo_hodov
     for i in range(3):
         # горизонтальная проверка
         if matric[0][i] + matric[1][i] + matric[2][i] == 30 or matric[0][i] + matric[1][i] + matric[2][i] == 3:
@@ -69,14 +78,15 @@ def check(matric):
             end('o')
         elif matric[0][2] + matric[1][1] + matric[2][0] == 3:
             end('x')
+        game_over = True
     elif sum(matric[0][:]) + sum(matric[1][:]) + sum(matric[2][:]) == 44:
         end('xo')
         game_over = True
 
+
 #победный экран
 def end(winner):
-    global scr
-    global game_over
+    global COL, window, scr, matric, flag, game_over, kolvo_hodov
     scr.fill('black')
     if winner == 'x':
         fon = pygame.font.Font(None, 100)
@@ -94,25 +104,39 @@ def end(winner):
         res = fon.render('Ничья', True, COL[0])
         scr.blit(res, (140, 100))
 #основной цикл
-while flag:
-    for event in pygame.event.get():
-        if event.type == pygame.QUIT:
-            flag = False
-        if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
-            coords = pygame.mouse.get_pos()
-            if matric[coords[1] // 200][coords[0] // 200] == 0:
-                matric[coords[1] // 200][coords[0] // 200] = 1
-                kolvo_hodov += 1
-                i, j = random.randint(0, 2), random.randint(0, 2)
-                while matric[i][j] != 0:
-                    i, j = random.randint(0, 2), random.randint(0, 2)
-                matric[i][j] = 10
-                kolvo_hodov += 1
-            check(matric)
-    if game_over is False:
-        field(scr)
-        figures(scr, matric)
-    window.blit(scr, (0, 0))
-    pygame.display.update()
-pygame.quit()
 
+
+def start():
+    pygame.init()
+    global COL, window, scr, matric, flag, game_over, kolvo_hodov
+    COL = [(155, 93, 229), (241, 91, 181), (0, 187, 249)]
+    window = pygame.display.set_mode((600, 600))
+    pygame.display.set_caption('Tic tac toe')
+    scr = pygame.display.set_mode((600, 600))
+    scr.fill((0, 0, 0))
+    matric = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    flag = True
+    game_over = False
+    kolvo_hodov = 0
+
+    while flag:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                flag = False
+            if event.type == pygame.MOUSEBUTTONDOWN and not game_over:
+                coords = pygame.mouse.get_pos()
+                if matric[coords[1] // 200][coords[0] // 200] == 0:
+                    matric[coords[1] // 200][coords[0] // 200] = 1
+                    kolvo_hodov += 1
+                    i, j = random.randint(0, 2), random.randint(0, 2)
+                    while matric[i][j] != 0:
+                        i, j = random.randint(0, 2), random.randint(0, 2)
+                    matric[i][j] = 10
+                    kolvo_hodov += 1
+                check(matric)
+        if game_over is False:
+            field(scr)
+            figures(scr, matric)
+        window.blit(scr, (0, 0))
+        pygame.display.update()
+    pygame.quit()
