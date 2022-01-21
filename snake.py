@@ -17,6 +17,8 @@ class Game:
 
     def start_game(self):
         pygame.init()
+        pygame.mixer.music.load('snake.mp3')
+        pygame.mixer.music.play()
 
     def print_name(self):
         self.screen = pygame.display.set_mode((
