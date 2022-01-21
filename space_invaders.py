@@ -59,13 +59,15 @@ class Game:
     aliens = []
     rockets = []
     lost = False
-    COLORS = [pygame.Color((16, 20, 25)), pygame.Color((0, 187, 249)), pygame.Color((155, 93, 229)), pygame.Color(241, 91, 181)]
+    COLORS = [pygame.Color((16, 20, 25)), pygame.Color((0, 187, 249)),
+              pygame.Color((155, 93, 229)), pygame.Color(241, 91, 181)]
 
-    def __init__(self, width, height):
+    def start(self, width, height):
         pygame.init()
         self.width = height
         self.height = width
         self.screen = pygame.display.set_mode((width, height))
+        pygame.display.set_caption('Космические захватчики')
         self.clock = pygame.time.Clock()
         running = True
 
@@ -75,7 +77,7 @@ class Game:
 
         while running:
             if len(self.aliens) == 0:
-                self.write_text("VICTORY")
+                self.write_text("ПОБЕДА")
 
             pressed = pygame.key.get_pressed()
             if pressed[pygame.K_LEFT]:
@@ -98,7 +100,7 @@ class Game:
                 inwader.check_for_collision(self)
                 if (inwader.y > height):
                     self.lost = True
-                    self.write_text("DEFEAT")
+                    self.write_text("ПОРАЖЕНИЕ")
 
             for laser in self.rockets:
                 laser.spawn()
@@ -114,4 +116,5 @@ class Game:
         self.screen.blit(textsurface, (320, 160))
 
 
-Game(800, 800)
+game = Game()
+game.start(800, 800)
