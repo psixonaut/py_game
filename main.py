@@ -171,6 +171,7 @@ class Background(QDialog):
             os.remove(path)
         elif self.game == 'snake':
             import snake
+            snake.start()
             snake_score = snake.score
             bd = sqlite3.connect("our_users_1.sqlite")
             cur = bd.cursor()
@@ -180,6 +181,7 @@ class Background(QDialog):
             import space_invaders
         elif self.game == 'arcanoid':
             import arcanoid
+            arcanoid.start()
         elif self.game == 'tictactoe':
             import tic_tac_toe
 
