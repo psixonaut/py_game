@@ -64,7 +64,7 @@ def start():
         color_list.append(random.choice(color))
 
     pygame.init()
-    pygame.mixer.music.load('arcanoid.mp3')
+    pygame.mixer.music.load('data_music/arcanoid.mp3')
     pygame.mixer.music.play()
     sc = pygame.display.set_mode(full_screen)
     clock = pygame.time.Clock()
