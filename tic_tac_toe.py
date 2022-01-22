@@ -19,7 +19,7 @@ def figures(scr, items):
     for i in range(3):
         for j in range(3):
             if items[i][j] == 10:
-                image = pygame.image.load('zero.png')
+                image = pygame.image.load('data_sprite/zero.png')
                 all_sprites = pygame.sprite.Group()
                 bomb = pygame.sprite.Sprite(all_sprites)
                 bomb.image = image
@@ -30,7 +30,7 @@ def figures(scr, items):
                 bomb.rect.y = i * 190 + 10
                 all_sprites.draw(scr)
             elif items[i][j] == 1:
-                image = pygame.image.load('cross.png')
+                image = pygame.image.load('data_sprite/cross.png')
                 all_sprites = pygame.sprite.Group()
                 bomb = pygame.sprite.Sprite(all_sprites)
                 bomb.image = image
@@ -108,7 +108,7 @@ def end(winner):
 
 def start():
     pygame.init()
-    pygame.mixer.music.load('tictactoe.mp3')
+    pygame.mixer.music.load('data_music/tictactoe.mp3')
     pygame.mixer.music.play()
     global COL, window, scr, matric, flag, game_over, kolvo_hodov
     COL = [(155, 93, 229), (241, 91, 181), (0, 187, 249)]
