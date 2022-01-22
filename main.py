@@ -167,23 +167,32 @@ class Background(QDialog):
                 with open('name_for_profile', 'w') as s:
                     s.write(name_for_profile)
             import tetris
+            tetris.start()
             path = os.path.join(os.path.abspath(os.path.dirname(__file__)), 'name_for_profile')
             os.remove(path)
         elif self.game == 'snake':
             import snake
             snake.start()
-            snake_score = snake.score
-            bd = sqlite3.connect("our_users_1.sqlite")
-            cur = bd.cursor()
-            cur.execute(f"""UPDATE users_info SET snake_score = {snake_score} WHERE name = '{name_for_profile}'""")
-            bd.commit()
+            if into_profile is True:
+                bd = sqlite3.connect("our_users_1.sqlite")
+                cur = bd.cursor()
+                old_record_snake = cur.execute(
+                    f"""SELECT snake_score FROM users_info WHERE name = '{name_for_profile}'""").fetchone()
+                snake_score = snake.score
+                if int(old_record_snake[0]) < int(snake_score):
+                    cur.execute(f"""UPDATE users_info SET snake_score = {snake_score} WHERE name = '{name_for_profile}'""")
+                bd.commit()
+                bd.close()
         elif self.game == 'shooter':
             import space_invaders
+            space_invaders.start()
         elif self.game == 'arcanoid':
             import arcanoid
             arcanoid.start()
         elif self.game == 'tictactoe':
             import tic_tac_toe
+            tic_tac_toe.start()
+
 
     def to_menu(self):
         menu = Window()
