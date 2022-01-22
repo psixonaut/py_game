@@ -135,5 +135,3 @@ def start():
         pygame.display.flip()
         clock.tick(FPS)
     pygame.quit()
-
-start()
