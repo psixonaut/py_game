@@ -58,7 +58,7 @@ def start():
     size = width, height = w * cell_size, h * cell_size
 
     pygame.init()
-    pygame.mixer.music.load('tetris.mp3')
+    pygame.mixer.music.load('data_music/tetris.mp3')
     pygame.mixer.music.play()
     sc = pygame.display.set_mode(full_screen)
     screen = pygame.Surface(size)
