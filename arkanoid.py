@@ -70,7 +70,7 @@ def start():
     clock = pygame.time.Clock()
     pygame.display.set_caption('Арканоид')
     sc.fill(pygame.Color(10, 10, 10))
-
+    count_game = 0
     # Цикл игры
     running = True
     while running:
@@ -119,7 +119,7 @@ def start():
             FPS += 1
 
         # Проверка на поражение
-        if circle[1] + center > height:
+        if circle[1] + center > height and count_game == 0:
             sc.fill(pygame.Color(10, 10, 10))
             fon = pygame.font.Font(None, 100)
             over = fon.render('Поражение!', True, pygame.Color((47, 102, 144)))
@@ -131,6 +131,9 @@ def start():
             fon = pygame.font.Font(None, 100)
             vin = fon.render('Победа!', True, pygame.Color((47, 102, 144)))
             sc.blit(vin, (260, 250))
+            count_game = 1
         pygame.display.flip()
         clock.tick(FPS)
     pygame.quit()
+
+start()
